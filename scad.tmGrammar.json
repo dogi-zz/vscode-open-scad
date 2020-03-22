@@ -1,0 +1,139 @@
+{
+  "scopeName": "source.scad",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#include-declaration" },
+    { "include": "#use-declaration" },
+    { "include": "#module-func-definition" },
+    { "include": "#expression" },
+    { "include": "#keywords" }
+  ],
+  "repository": {
+
+    "comment": {
+      "patterns": [
+        { "begin": "\\/\\/",  "end": "\\n",   "name": "comment.line" },
+        { "begin": "\\/\\*", "end": "\\*\\/", "name": "comment.block" }
+      ]
+    },
+
+    "use-declaration": {
+      "patterns": [
+        { 
+          "match": "(use\\s*)(<.*?>)",
+          "captures" : {
+            "1" : { "name": "keyword.control" },
+            "2" : { "name": "string.unquoted" }
+          }
+        }
+      ]
+    },
+    "include-declaration": {
+      "patterns": [
+        { 
+          "match": "(include\\s*)(<.*?>)",
+          "captures" : {
+            "1" : { "name": "keyword.control" },
+            "2" : { "name": "string.unquoted" }
+          }
+        }
+      ]
+    },
+
+    "module-func-definition": {
+      "match": "(module|function)\\s+([a-zA-Z_$]+[a-zA-Z0-9_$]*)",
+      "captures" : { 
+        "1" : {"name": "storage.type"},
+        "2" : {"name": "entity.name.function"}
+      }
+    },
+
+    
+    "expression": {
+      "patterns": [
+        { "include": "#comment" },
+        { "include": "#expression-call"  },
+        { "include": "#expression-string"  },
+        { "include": "#expression-number"  }
+      ]
+    },
+    "expression-call": {
+      "match": "([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
+      "captures" : { "1" : {"name": "variable"} }
+    },
+    "expression-string": {
+      "patterns": [
+        { "match": "\"\"", "name": "string" },
+        { "begin": "\"", "end": "[^\\\\]\"", "name": "string" }
+      ]
+    },
+    "expression-number": {
+      "match": "[^a-zA-Z_](\\d+\\.?\\d*)",
+      "captures" : { "1" : {"name": "constant.numeric"} }
+    },
+
+    
+
+    "keywords": {
+      "patterns": [
+        { "include": "#keywords.old" },
+        { "include": "#keywords.constants" },
+        { "include": "#keywords.2d" },
+        { "include": "#keywords.3d" },
+        { "include": "#keywords.transformations" },
+        { "include": "#keywords.boolean" },
+        { "include": "#keywords.ctrl" },
+        { "include": "#keywords.test" },
+        { "include": "#keywords.other" },
+        { "include": "#keywords.functions" },
+        { "include": "#keywords.math" }
+      ]
+    },
+
+    "keywords.old": {
+      "match": "[^a-zA-Z0-9_](include|var|assign)[^a-zA-Z0-9_]",
+      "captures" : { "1" : { "name": "keyword" } }
+    },
+    "keywords.constants": {
+      "match": "[^a-zA-Z0-9_](undef|true|false|PI|\\$fa|\\$fs|\\$fn|\\$t|\\$vpr|\\$vpt|\\$children|\\$preview)[^a-zA-Z0-9_]",
+      "captures" : { "1" : { "name": "support.variable" } }
+    },
+    "keywords.2d": {
+      "match": "[^a-zA-Z0-9_](circle|square|square|polygon|text|projection)\\s*\\(",
+      "captures" : { "1" : { "name": "support.type" } }
+    },
+    "keywords.3d": {
+      "match": "[^a-zA-Z0-9_](sphere|cube|cylinder|polyhedron|linear_extrude|rotate_extrude)\\s*\\(",
+      "captures" : { "1" : { "name": "support.type" } }
+    },
+    "keywords.transformations": {
+      "match": "[^a-zA-Z0-9_](translate|rotate|scale|resize|mirror|multmatrix|color|offset|hull|minkowski)\\s*\\(",
+      "captures" : { "1" : { "name": "support.type" } }
+    },
+    "keywords.boolean": {
+      "match": "[^a-zA-Z0-9_](union|difference|intersection)\\s*\\(",
+      "captures" : { "1" : { "name": "support.type" } }
+    },    
+    "keywords.ctrl": {
+      "match": "[^a-zA-Z0-9_](for|each|if|else|let|intersection_for)\\s*\\(",
+      "captures" : { "1" : { "name": "keyword" } }
+    },
+    "keywords.test": {
+      "match": "[^a-zA-Z0-9_](is_undef|is_bool|is_num|is_string|is_list)\\s*\\(",
+      "captures" : { "1" : { "name": "entity.name.class" } }
+    },
+    "keywords.other": {
+      "match": "[^a-zA-Z0-9_](echo|render|children|assert)\\s*\\(",
+      "captures" : { "1" : { "name": "support.type" } }
+    },
+    "keywords.functions": {
+      "match": "[^a-zA-Z0-9_](concat|lookup|str|chr|ord|search|version|version_num|parent_module)\\s*\\(",
+      "captures" : { "1" : { "name": "support.type" } }
+    },
+    "keywords.math": {
+      "match": "[^a-zA-Z0-9_](abs|sign|sin|cos|tan|acos|asin|atan|atan2|floor|round|ceil|ln|len|let|log|pow|sqrt|exp|rands|min|max|norm|cross)\\s*\\(",
+      "captures" : { "1" : { "name": "support.type" } }
+    }
+
+  }
+}
